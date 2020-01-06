@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './components/list';
+import List from './components/list';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(){
+    super();
+    this.state={
+      data:null,
+      isLoaded: false
+
+    }
+   
+  }
+  componentDidMount(){
+    //API call here
+    fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+      .then(response => response.json())
+      .then(data => this.setState({
+          data:data,
+          isLoaded: true
+      }))
+   
+  }
+  render(){
+    let item= null;
+    if(this.state.isLoaded){
+       item = this.state.data.map(item => {
+         console.log(item)
+        return <List key={item} data={item}/>
+      })
+   
+    
+    }else{
+      console.log("is loading");
+    }
+    
+    
+    return (
+<div>
+  {item}
+</div>
+        
+
+    )
+  }
 }
 
 export default App;
